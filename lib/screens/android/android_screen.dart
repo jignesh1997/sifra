@@ -14,7 +14,7 @@ class AndroidClipboardMonitor extends StatelessWidget {
     return Obx(
       () => Scaffold(
         appBar: AppBar(
-          title: Text('Clipboard Monitor'),
+          title: Text('Sifra android'),
         ),
         body: Center(
           child: Container(
@@ -80,6 +80,7 @@ class AndroidClipboardMonitor extends StatelessWidget {
                   ]),
                 ),
                 Spacer(),
+
 
                 Obx(() => ElevatedButton(
                   onPressed: controller.isListening.value || controller.selectedPath.value == null

@@ -19,6 +19,7 @@ class MainScreen extends StatelessWidget {
           ),
           body: Center(
             child: Stack(
+              fit: StackFit.expand,
               children: [
                 Align(
                   alignment: Alignment.topLeft,
@@ -38,6 +39,7 @@ class MainScreen extends StatelessWidget {
 
                 Column(
                   mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ElevatedButton(
@@ -51,6 +53,12 @@ class MainScreen extends StatelessWidget {
                         Get.to(() => ClipboardMonitor());
                       },
                       child: Text('Flutter'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                      //  Get.to(() => AndroidClipboardMonitor());
+                      },
+                      child: Text('React native'),
                     ),
                     ElevatedButton(
                       onPressed: () {
