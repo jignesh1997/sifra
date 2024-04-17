@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart' as path;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sifra/screens/util/extensions.dart';
 
 
 import '../widgets/ConfirmationDialog.dart';
+import '../widgets/color_name_dialog.dart';
 
 class AndroidController extends GetxController {
   // Observable variables
@@ -16,6 +18,8 @@ class AndroidController extends GetxController {
   RxBool isListening = false.obs;
   Rx<String?> selectedPath = Rx<String?>(null);
   RxBool autoCreateFile = true.obs;
+  RxBool autoCreateColor = false.obs;
+  RxBool autoColorName = false.obs;
 
   // Timer for periodic clipboard checks
   Timer? timer;
@@ -28,7 +32,7 @@ class AndroidController extends GetxController {
 
   void startMonitoringClipboard() async {
     isListening.value = true;
-    timer = Timer.periodic(Duration(seconds: 1), (_) => checkClipboardContent());
+    timer = Timer.periodic(Duration(milliseconds: 400), (_) => checkClipboardContent());
   }
 
   void stopMonitoringClipboard() {
@@ -40,11 +44,22 @@ class AndroidController extends GetxController {
     String clipboardContent = await FlutterClipboard.paste();
     if (clipboardContent != lastClipboardContent.value) {
       lastClipboardContent.value = clipboardContent;
-      List<String>? pathAndContent = preprocessContent(clipboardContent);
-      if (pathAndContent != null) {
-        String filePath = pathAndContent[0];
-        String fileContent = pathAndContent[1];
+      List<String> lines =    lastClipboardContent.split('\n');
+      print("ClipboardContent::::${clipboardContent}");
+      if (lines[0].isValidColor()==true) {
+        print("ClipboardContent::::Is valid");
+       processForColorFound(lines[0]!.trim());
+      }
+      else if (lines[0]?.startsWith('// ')==true) {
+        List<String>? pathAndContent = preprocessContent(clipboardContent);
+
+        String filePath = pathAndContent?[0] ?? "";
+        String fileContent = pathAndContent?[1] ?? "";
         createFile(filePath, fileContent);
+
+      }
+      else{
+        print("ClipboardContent::::in Else");
       }
     }
   }
@@ -58,12 +73,6 @@ class AndroidController extends GetxController {
     }
 
     String firstLine = lines[0].trim();
-
-    if (!firstLine.startsWith('// ')) {
-      print('First line does not contain a valid path.');
-      return null;
-    }
-
     String filePath = firstLine.substring(3).trim();
 
     if (filePath.isEmpty) {
@@ -132,6 +141,10 @@ class AndroidController extends GetxController {
     autoCreateFile.value = value;
   }
 
+  void toggleAutoCreateColor(bool value) {
+    autoCreateColor.value = value;
+  }
+
   Future<void> addColorToColorsFile(String colorName, String colorValue) async {
     if (selectedPath.value == null) {
       showErrorToast('No project location path selected.');
@@ -165,7 +178,7 @@ class AndroidController extends GetxController {
 
       // Insert the new color entry before the closing tag
       String newColorEntry = '    <color name="$colorName">$colorValue</color>';
-      colorsFileContent = colorsFileContent.replaceRange(closingTagIndex, closingTagIndex, newColorEntry + '\n</resources>');
+      colorsFileContent = colorsFileContent.replaceRange(closingTagIndex, closingTagIndex, newColorEntry + '\n');
 
       // Write the updated colors.xml file
       await File(colorsFilePath).writeAsString(colorsFileContent);
@@ -177,23 +190,36 @@ class AndroidController extends GetxController {
   }
 
   void showErrorToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-    );
+   print(message);
   }
 
   void showSuccessToast(String message) {
-    Fluttertoast.showToast(
+    print(message);
+
+   /* Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       backgroundColor: Colors.green,
       textColor: Colors.white,
-    );
+    );*/
   }
 
+  void processForColorFound(String color) async{
+
+    if(autoColorName.value==true){
+      addColorToColorsFile(color.getColorName(), color);
+    }
+    else{
+      await Get.dialog(
+        ColorNameDialog(
+          colorCode: color,
+          onConfirm: (colorName) {
+            addColorToColorsFile(colorName, color);
+          },
+        ),
+      );
+    }
+
+  }
 }

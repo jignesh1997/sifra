@@ -60,9 +60,9 @@ class AndroidClipboardMonitor extends StatelessWidget {
                             contentPadding: EdgeInsets.zero,
                             controlAffinity: ListTileControlAffinity.leading,
                             title: Text('Auto create Color'),
-                            value: false,
+                            value: controller.autoCreateColor.value,
                             onChanged: (value) {
-                              // TODO: Implement checkbox 2 functionality
+                              controller.toggleAutoCreateColor(value!);
                             },
                           ),
                           CheckboxListTile(

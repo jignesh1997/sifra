@@ -3,24 +3,7 @@ import 'dart:ui';
 import 'package:sifra/screens/util/color.dart';
 
 extension StringExtensions on String {
-  bool isValidColor() {
-    if (startsWith('#')) {
-      // Check if the color string is a valid hex color code
-      String hexColor = substring(1);
-      if (hexColor.length == 6 || hexColor.length == 8) {
-        return RegExp(r'^[0-9a-fA-F]+$').hasMatch(hexColor);
-      }
-    } else {
-      // Check if the color string is a valid color name
-      try {
-        Color color = Color(int.parse(this));
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }
-    return false;
-  }
+  bool isValidColor()=>startsWith('#');
 
   String getColorName() {
    var color = this.toUpperCase();
@@ -46,7 +29,7 @@ List<int> _rgb(String color) {
   return [
     int.parse(color.substring(1, 3), radix: 16),
     int.parse(color.substring(3, 5), radix: 16),
-    int.parse(color.substring(5, 7), radix: 16),
+    int.parse(color.substring(5, 6), radix: 16),
   ];
 }
 
