@@ -19,7 +19,6 @@ class AndroidController extends GetxController {
   Rx<String?> selectedPath = Rx<String?>(null);
   RxBool autoCreateFile = true.obs;
   RxBool autoCreateColor = false.obs;
-  RxBool autoColorName = false.obs;
 
   // Timer for periodic clipboard checks
   Timer? timer;
@@ -207,7 +206,7 @@ class AndroidController extends GetxController {
 
   void processForColorFound(String color) async{
 
-    if(autoColorName.value==true){
+    if(autoCreateColor.value==true){
       addColorToColorsFile(color.getColorName(), color);
     }
     else{
