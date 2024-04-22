@@ -156,13 +156,40 @@ void convertSvgToVectorXml(String svgFilePath, String outputDir) {
             builder.attribute('android:fillColor', fillColor);
           } else {
             // Provide a default fill color if not specified or invalid
-            builder.attribute('android:fillColor', '#000000');
+            //builder.attribute('android:fillColor', '#000000');
           }
+
+          final strokeColor = element.getAttribute('stroke');
+          if (strokeColor != null && strokeColor.startsWith('#')) {
+            builder.attribute('android:strokeColor', strokeColor);
+          }
+
+          final strokeWidth = element.getAttribute('stroke-width');
+          if (strokeWidth != null) {
+            builder.attribute('android:strokeWidth', strokeWidth);
+          }
+
+          final strokeMiterLimit = element.getAttribute('stroke-miterlimit');
+          if (strokeMiterLimit != null) {
+            builder.attribute('android:strokeMiterLimit', strokeMiterLimit);
+          }
+
+          final strokeLineCap = element.getAttribute('stroke-linecap');
+          if (strokeLineCap != null) {
+            builder.attribute('android:strokeLineCap', strokeLineCap);
+          }
+
+          final strokeLineJoin = element.getAttribute('stroke-linejoin');
+          if (strokeLineJoin != null) {
+            builder.attribute('android:strokeLineJoin', strokeLineJoin);
+          }
+
           builder.attribute('android:pathData', '${element.getAttribute('d')}');
         });
       }
     }
   });
+
   // Generate the vector drawable XML
   final vectorXml = builder.buildDocument();
 
