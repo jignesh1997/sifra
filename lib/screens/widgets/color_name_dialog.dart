@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sifra/screens/util/extensions.dart';
 
-class ColorNameDialog extends StatelessWidget {
-  final String colorCode;
+class InputNameDialog extends StatelessWidget {
+  final String content;
+  final String generatedName;
+  final String title;
+  final String labelText;
   final Function(String) onConfirm;
 
-  ColorNameDialog({
-    required this.colorCode,
+  InputNameDialog({
+    required this.content,
+    required this.generatedName,
+    required this.title,
+    required this.labelText,
     required this.onConfirm,
   });
 
-  final TextEditingController _colorNameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    _colorNameController.text = colorCode.getColorName();
+    _nameController.text = generatedName;
 
     return AlertDialog(
-      title: Text('Enter Color Name'),
+      title: Text(title),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Color Code: $colorCode'),
+          Text('$labelText: $content'),
           SizedBox(height: 16),
           TextField(
-            controller: _colorNameController,
+            controller: _nameController,
             decoration: InputDecoration(
-              labelText: 'Color Name',
+              labelText: labelText,
             ),
           ),
         ],
@@ -41,9 +46,9 @@ class ColorNameDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            String colorName = _colorNameController.text.trim();
-            if (colorName.isNotEmpty) {
-              onConfirm(colorName);
+            String name = _nameController.text.trim();
+            if (name.isNotEmpty) {
+              onConfirm(name);
               Get.back();
             }
           },

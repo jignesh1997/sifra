@@ -1,7 +1,10 @@
 import 'dart:ui';
-
 import 'package:sifra/screens/util/color.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:path_parsing/path_parsing.dart';
+import 'dart:io';
+import 'package:path/path.dart' as path;
+import 'package:xml/xml.dart';
 extension StringExtensions on String {
   bool isValidColor()=>startsWith('#');
 
@@ -107,3 +110,73 @@ List<dynamic> _name(String color) {
     return ['#$cl', colors[cl]!, false];
   }
 }
+
+
+
+
+// ... (existing code)
+
+
+
+void convertSvgToVectorXml(String svgFilePath, String outputDir) {
+  // Read the SVG file
+  final svgFile = File(svgFilePath);
+  final svgContent = svgFile.readAsStringSync();
+
+  // Parse the SVG content
+  final svgDocument = XmlDocument.parse(svgContent);
+  final svgElement = svgDocument.rootElement;
+
+  // Create a new XML builder for the vector drawable
+  final builder = XmlBuilder();
+
+  // Start building the vector drawable
+  final widthStr = svgElement.getAttribute('width');
+  final heightStr = svgElement.getAttribute('height');
+
+  // Remove non-numeric characters and append 'dp' unit
+  final width = '${widthStr?.replaceAll(RegExp(r'[^0-9.]'), '')}dp';
+  final height = '${heightStr?.replaceAll(RegExp(r'[^0-9.]'), '')}dp';
+
+  // Start building the vector drawable
+  builder.processing('xml', 'version="1.0" encoding="utf-8"');
+  builder.element('vector', nest: () {
+    builder.attribute('xmlns:android', 'http://schemas.android.com/apk/res/android');
+    builder.attribute('android:width', width);
+    builder.attribute('android:height', height);
+    builder.attribute('android:viewportWidth', '${svgElement.getAttribute('viewBox')?.split(' ')[2]}');
+    builder.attribute('android:viewportHeight', '${svgElement.getAttribute('viewBox')?.split(' ')[3]}');
+
+    // Convert SVG elements to vector drawable paths
+    for (final element in svgElement.children) {
+      if (element is XmlElement && element.name.local == 'path') {
+        builder.element('path', nest: () {
+          final fillColor = element.getAttribute('fill');
+          if (fillColor != null && fillColor.startsWith('#')) {
+            builder.attribute('android:fillColor', fillColor);
+          } else {
+            // Provide a default fill color if not specified or invalid
+            builder.attribute('android:fillColor', '#000000');
+          }
+          builder.attribute('android:pathData', '${element.getAttribute('d')}');
+        });
+      }
+    }
+  });
+  // Generate the vector drawable XML
+  final vectorXml = builder.buildDocument();
+
+  // Create the output directory if it doesn't exist
+ /* final outputDirectory = Directory(outputDir);
+  if (!outputDirectory.existsSync()) {
+    outputDirectory.createSync(recursive: true);
+  }*/
+
+  // Write the vector drawable XML to a file
+  final outputFile = File(outputDir);
+  outputFile.writeAsStringSync(vectorXml.toXmlString(pretty: true));
+
+  print('Vector drawable generated successfully: ${outputFile.path}');
+}
+
+// ... (existing code)

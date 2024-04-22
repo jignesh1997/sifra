@@ -69,19 +69,39 @@ class AndroidClipboardMonitor extends StatelessWidget {
                             contentPadding: EdgeInsets.zero,
                             controlAffinity: ListTileControlAffinity.leading,
                             title: Text('Auto create String'),
-                            value: false,
+                            value: controller.autoCreateString.value,
                             onChanged: (value) {
+                              controller.autoCreateString.value=!(controller.autoCreateString.value);
                              // controller.toggleAutoCreateFile(value!);
                             },
                           ),
+                          SizedBox(height: 12,),
+                          GestureDetector(
+                            onTap: controller.isListening.value ? null : controller.showSvgFolderPickerDialog,
+                            child: AbsorbPointer(
+                              child: Obx(() => TextField(
+                                controller: TextEditingController(text: controller.svgVectorSelectedPath.value),
+                                decoration: InputDecoration(
+                                  labelText: 'SVG Folder Path',
+                                  border: OutlineInputBorder(),
+                                  suffixIcon: Icon(Icons.folder_open),
+                                ),
+                              )),
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: controller.generateVectorsFromFolder,
+                            child: Text('Generate Vectors from Folder'),
+                          ),
+
+
                         ],
                       ),
                     ),
                   ]),
                 ),
                 Spacer(),
-
-
                 Obx(() => ElevatedButton(
                   onPressed: controller.isListening.value || controller.selectedPath.value == null
                       ? null
