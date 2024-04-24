@@ -130,7 +130,7 @@ void convertSvgToVectorXml(String svgFilePath, String outputDir) {
   // Create a new XML builder for the vector drawable
   final builder = XmlBuilder();
 
-  // Start building the vector drawable
+  // Extract width and height values
   final widthStr = svgElement.getAttribute('width');
   final heightStr = svgElement.getAttribute('height');
 
@@ -152,36 +152,15 @@ void convertSvgToVectorXml(String svgFilePath, String outputDir) {
       if (element is XmlElement && element.name.local == 'path') {
         builder.element('path', nest: () {
           final fillColor = element.getAttribute('fill');
-          if (fillColor != null && fillColor.startsWith('#')) {
-            builder.attribute('android:fillColor', fillColor);
+          if (fillColor != null && fillColor != 'none') {
+            builder.attribute('android:fillColor', fillColor.startsWith('#') ? fillColor : '#$fillColor');
           } else {
-            // Provide a default fill color if not specified or invalid
-            //builder.attribute('android:fillColor', '#000000');
+            builder.attribute('android:fillColor', '#00000000');
           }
 
           final strokeColor = element.getAttribute('stroke');
-          if (strokeColor != null && strokeColor.startsWith('#')) {
-            builder.attribute('android:strokeColor', strokeColor);
-          }
-
-          final strokeWidth = element.getAttribute('stroke-width');
-          if (strokeWidth != null) {
-            builder.attribute('android:strokeWidth', strokeWidth);
-          }
-
-          final strokeMiterLimit = element.getAttribute('stroke-miterlimit');
-          if (strokeMiterLimit != null) {
-            builder.attribute('android:strokeMiterLimit', strokeMiterLimit);
-          }
-
-          final strokeLineCap = element.getAttribute('stroke-linecap');
-          if (strokeLineCap != null) {
-            builder.attribute('android:strokeLineCap', strokeLineCap);
-          }
-
-          final strokeLineJoin = element.getAttribute('stroke-linejoin');
-          if (strokeLineJoin != null) {
-            builder.attribute('android:strokeLineJoin', strokeLineJoin);
+          if (strokeColor != null && strokeColor != 'none') {
+            builder.attribute('android:strokeColor', strokeColor.startsWith('#') ? strokeColor : '#$strokeColor');
           }
 
           builder.attribute('android:pathData', '${element.getAttribute('d')}');
