@@ -151,6 +151,21 @@ void convertSvgToVectorXml(String svgFilePath, String outputDir) {
     for (final element in svgElement.children) {
       if (element is XmlElement && element.name.local == 'path') {
         builder.element('path', nest: () {
+          final opacity = element.getAttribute('opacity');
+          if (opacity != null) {
+            builder.attribute('android:fillAlpha', opacity);
+          }
+
+          final fillRule = element.getAttribute('fill-rule');
+          if (fillRule != null) {
+            builder.attribute('android:fillType', fillRule == 'evenodd' ? 'evenOdd' : 'nonZero');
+          }
+
+          final clipRule = element.getAttribute('clip-rule');
+          if (clipRule != null) {
+            builder.attribute('android:clipToOutline', clipRule == 'evenodd' ? 'true' : 'false');
+          }
+
           final fillColor = element.getAttribute('fill');
           if (fillColor != null && fillColor != 'none') {
             builder.attribute('android:fillColor', fillColor.startsWith('#') ? fillColor : '#$fillColor');
@@ -158,16 +173,12 @@ void convertSvgToVectorXml(String svgFilePath, String outputDir) {
             builder.attribute('android:fillColor', '#00000000');
           }
 
-          final strokeColor = element.getAttribute('stroke');
-          if (strokeColor != null && strokeColor != 'none') {
-            builder.attribute('android:strokeColor', strokeColor.startsWith('#') ? strokeColor : '#$strokeColor');
-          }
-
           builder.attribute('android:pathData', '${element.getAttribute('d')}');
         });
       }
     }
   });
+
 
   // Generate the vector drawable XML
   final vectorXml = builder.buildDocument();
