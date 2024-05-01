@@ -24,6 +24,21 @@ class AndroidController extends GetxController {
   RxBool autoCreateColor = false.obs;
   RxBool autoCreateString = true.obs;
 
+  RxString selectedScriptPath = ''.obs;
+
+
+  Future<void> selectScriptFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['sh'],
+    );
+
+    if (result != null && result.files.isNotEmpty) {
+      selectedScriptPath.value = result.files.first.path!;
+    }
+  }
+
+
   // Timer for periodic clipboard checks
   Timer? timer;
 
@@ -51,7 +66,15 @@ class AndroidController extends GetxController {
       print("ClipboardContent::::${clipboardContent}");
       if (lines[0].isValidColor()==true) {
         print("ClipboardContent::::Is valid");
-       processForColorFound(lines[0]!.trim());
+
+        String colorString = lines[0].trim();
+
+        // Add '#' symbol if not present
+        if (!colorString.startsWith('#')) {
+          colorString = '#$colorString';
+        }
+
+        processForColorFound(colorString);
       }
       else if (lines[0]?.startsWith('// ')==true) {
         List<String>? pathAndContent = preprocessContent(clipboardContent);

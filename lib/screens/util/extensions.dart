@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:sifra/screens/util/color.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,9 +6,29 @@ import 'package:path_parsing/path_parsing.dart';
 import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:xml/xml.dart';
-extension StringExtensions on String {
-  bool isValidColor()=>startsWith('#');
+import 'package:process_run/shell.dart';
 
+extension StringExtensions on String {
+  bool isValidColor() {
+    if (isEmpty) {
+      return false;
+    }
+
+    String colorString = this;
+
+    // Remove '#' symbol if present
+    if (colorString[0] == '#') {
+      colorString = colorString.substring(1);
+    }
+
+    // Check if the color string has a valid length (3 or 6 characters)
+    if (colorString.length != 3 && colorString.length != 6) {
+      return false;
+    }
+    // Check if ahars are valid hexadecimal digits
+    final hexRegExp = RegExp(r'^[0-9A-Fa-f]+$');
+    return hexRegExp.hasMatch(colorString);
+  }
   String getColorName() {
    var color = this.toUpperCase();
     if (color.length < 3 || color.length > 7) {
@@ -197,3 +218,25 @@ void convertSvgToVectorXml(String svgFilePath, String outputDir) {
 }
 
 // ... (existing code)
+
+
+Future<void> executeSelectedScript(String scriptPath,String content) async {
+  if (scriptPath.isNotEmpty) {
+    try {
+      // Make the script file executable
+      await Process.run('chmod', ['+x', scriptPath]);
+
+      // Execute the script
+      var result = await Shell().run(scriptPath);
+      print(result.outText);
+    } catch (e) {
+      print('Error executing script: $e');
+    }
+  } else {
+    print('No script file selected');
+  }
+}
+
+String convertPathWithSpaces(String path) {
+  return path.replaceAll(' ', '\\ ');
+}

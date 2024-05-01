@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
+import 'package:sifra/screens/widgets/copy_magic_prompt.dart';
+import 'package:sifra/screens/widgets/custom_app_bar.dart';
 
+import '../widgets/execute_script_widget.dart';
 import 'android_clipboard_monitor.dart';
 
 class AndroidClipboardMonitor extends StatelessWidget {
@@ -13,9 +16,7 @@ class AndroidClipboardMonitor extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
-        appBar: AppBar(
-          title: Text('Sifra android'),
-        ),
+        appBar: CustomAppBar(title: "Sifra android",),
         body: Center(
           child: Container(
             padding: EdgeInsets.all(22),
@@ -76,24 +77,6 @@ class AndroidClipboardMonitor extends StatelessWidget {
                             },
                           ),
                           SizedBox(height: 12,),
-                          GestureDetector(
-                            onTap: controller.isListening.value ? null : controller.showSvgFolderPickerDialog,
-                            child: AbsorbPointer(
-                              child: Obx(() => TextField(
-                                controller: TextEditingController(text: controller.svgVectorSelectedPath.value),
-                                decoration: InputDecoration(
-                                  labelText: 'SVG Folder Path',
-                                  border: OutlineInputBorder(),
-                                  suffixIcon: Icon(Icons.folder_open),
-                                ),
-                              )),
-                            ),
-                          ),
-                          SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: controller.generateVectorsFromFolder,
-                            child: Text('Generate Vectors from Folder'),
-                          ),
 
 
                         ],
@@ -101,6 +84,16 @@ class AndroidClipboardMonitor extends StatelessWidget {
                     ),
                   ]),
                 ),
+                CopyMagicPromptWidget(),
+               /* ExecuteScriptWidget(
+                  selectedScriptPath:controller.selectedScriptPath.value,
+                  onScriptSelected: (path){
+                    controller.selectedScriptPath.value=path;
+                  },
+                  onScriptExecuted: (){
+
+                  },
+                ),*/
                 Spacer(),
                 Obx(() => ElevatedButton(
                   onPressed: controller.isListening.value || controller.selectedPath.value == null

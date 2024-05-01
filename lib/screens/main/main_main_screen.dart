@@ -6,85 +6,65 @@ import '../android/android_screen.dart';
 import '../general_clipborad_to_file/clipboard_screen.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../widgets/custom_app_bar.dart';
 
 class MainScreen extends StatelessWidget {
-  var _isAlwaysOnTop = false.obs;
-
   @override
   Widget build(BuildContext context) {
-    return  Obx(
-      ()=> Scaffold(
-          appBar: AppBar(
-            title: Text('Main Screen'),
-          ),
-          body: Center(
-            child: Stack(
-              fit: StackFit.expand,
+    return Scaffold(
+      appBar: CustomAppBar(
+        title: 'Main Screen',
+      ),
+      body: Center(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    children: [
-                      Text("Always on Top"),
-                      Checkbox(
-                        value: _isAlwaysOnTop.value,
-                        onChanged: (value) async {
-                            _isAlwaysOnTop.value = value!;
-                          await windowManager.setAlwaysOnTop(value!);
-                        },
-                      ),
-                    ],
-                  ),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.to(() => AndroidClipboardMonitor());
+                  },
+                  child: Text('Android'),
                 ),
-
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.to(() => AndroidClipboardMonitor());
-                      },
-                      child: Text('Android'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.to(() => ClipboardMonitor());
-                      },
-                      child: Text('Flutter'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                      //  Get.to(() => AndroidClipboardMonitor());
-                      },
-                      child: Text('React native'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.to(() => ClipboardMonitor());
-                      },
-                      child: Text('Genral'),
-                    ),
-                    // Add more options here
-                  ],
+                ElevatedButton(
+                  onPressed: () {
+                    Get.to(() => ClipboardMonitor());
+                  },
+                  child: Text('Flutter'),
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    //  Get.to(() => AndroidClipboardMonitor());
+                  },
+                  child: Text('React native'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.to(() => ClipboardMonitor());
+                  },
+                  child: Text('Genral'),
+                ),
+                // Add more options here
               ],
             ),
-          ),
-          bottomNavigationBar: BottomAppBar(
-            child: Container(
-              height: 50,
-              child: Center(
-                child: Text(
-                  'Developed by Jignesh Shakya with ❤️',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          height: 50,
+          child: Center(
+            child: Text(
+              'Developed by Jignesh Shakya with ❤️',
+              style: TextStyle(fontSize: 16),
             ),
           ),
         ),
-
+      ),
     );
   }
 }
