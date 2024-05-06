@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sifra/screens/flutter/flutter_screen.dart';
 
 import '../android/android_screen.dart';
 import '../general_clipborad_to_file/clipboard_screen.dart';
@@ -32,7 +33,7 @@ class MainScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Get.to(() => ClipboardMonitor());
+                    Get.to(() => FlutterDeveloperScreen());
                   },
                   child: Text('Flutter'),
                 ),

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
-import 'package:sifra/screens/util/color.dart';
+import 'package:sifra/screens/util/color_array.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_parsing/path_parsing.dart';
 import 'dart:io';
@@ -28,6 +28,9 @@ extension StringExtensions on String {
     // Check if ahars are valid hexadecimal digits
     final hexRegExp = RegExp(r'^[0-9A-Fa-f]+$');
     return hexRegExp.hasMatch(colorString);
+  }
+  String toSnakeCase() {
+    return replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_').toLowerCase();
   }
   String getColorName() {
    var color = this.toUpperCase();

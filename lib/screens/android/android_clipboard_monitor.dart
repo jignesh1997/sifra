@@ -2,15 +2,10 @@ import 'dart:async';
 import 'dart:io';
 import 'package:clipboard/clipboard.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart' as path;
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sifra/screens/util/extensions.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
-
+import '../util/mis_util.dart';
 import '../widgets/ConfirmationDialog.dart';
 import '../widgets/color_name_dialog.dart';
 
@@ -32,7 +27,6 @@ class AndroidController extends GetxController {
       type: FileType.custom,
       allowedExtensions: ['sh'],
     );
-
     if (result != null && result.files.isNotEmpty) {
       selectedScriptPath.value = result.files.first.path!;
     }
@@ -229,22 +223,6 @@ class AndroidController extends GetxController {
     } catch (e) {
       showErrorToast('Error adding color entry: $e');
     }
-  }
-
-  void showErrorToast(String message) {
-   print(message);
-  }
-
-  void showSuccessToast(String message) {
-    print(message);
-
-   /* Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.green,
-      textColor: Colors.white,
-    );*/
   }
 
   void processForColorFound(String color) async{

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:get/get.dart';
+import 'package:sifra/screens/util/mis_util.dart';
 class CopyMagicPromptWidget extends StatelessWidget {
 
 
@@ -8,17 +10,15 @@ class CopyMagicPromptWidget extends StatelessWidget {
 
   Future<void> _copyToClipboard() async {
     await Clipboard.setData(const ClipboardData(text: "Add file location at top: something like this ``// pathtocreate/subpath/filename.extension``."));
-    // Optional: Show a snackbar or toast to indicate that the text has been copied
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   SnackBar(content: Text('Text copied to clipboard')),
-    // );
+    showSuccessToast("Prompt Copied");
+
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _copyToClipboard,
-      child: Row(
+      child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Column(

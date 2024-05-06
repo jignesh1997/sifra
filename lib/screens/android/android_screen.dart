@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:file_picker/file_picker.dart';
@@ -21,7 +22,8 @@ class AndroidClipboardMonitor extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(22),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
                 GestureDetector(
@@ -32,7 +34,7 @@ class AndroidClipboardMonitor extends StatelessWidget {
                     child: TextField(
                       controller: TextEditingController(
                           text: controller.selectedPath.value ?? ""),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Select the project',
                         border: OutlineInputBorder(),
                         suffixIcon: Icon(Icons.folder_open),
@@ -40,7 +42,7 @@ class AndroidClipboardMonitor extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Container(
@@ -84,7 +86,11 @@ class AndroidClipboardMonitor extends StatelessWidget {
                     ),
                   ]),
                 ),
-                CopyMagicPromptWidget(),
+                SizedBox(height: 20,),
+
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: CopyMagicPromptWidget()),
                /* ExecuteScriptWidget(
                   selectedScriptPath:controller.selectedScriptPath.value,
                   onScriptSelected: (path){
@@ -101,12 +107,12 @@ class AndroidClipboardMonitor extends StatelessWidget {
                       : controller.startMonitoringClipboard,
                   child: Text('Start Listening'),
                 )),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Obx(() => ElevatedButton(
                   onPressed: controller.isListening.value ? controller.stopMonitoringClipboard : null,
                   child: Text('Stop Listening'),
                 )),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Obx(() => Text(
                       controller.isListening.value
                           ? 'Monitoring clipboard changes...'
