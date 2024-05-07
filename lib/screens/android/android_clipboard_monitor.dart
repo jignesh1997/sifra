@@ -22,17 +22,6 @@ class AndroidController extends GetxController {
   RxString selectedScriptPath = ''.obs;
 
 
-  Future<void> selectScriptFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['sh'],
-    );
-    if (result != null && result.files.isNotEmpty) {
-      selectedScriptPath.value = result.files.first.path!;
-    }
-  }
-
-
   // Timer for periodic clipboard checks
   Timer? timer;
 
@@ -342,15 +331,6 @@ class AndroidController extends GetxController {
       showSuccessToast('Vector drawables generated successfully.');
     } catch (e) {
       showErrorToast('Error generating vector drawables: $e');
-    }
-  }
-
-  Future<void> showSvgFolderPickerDialog() async {
-    String? path = await FilePicker.platform.getDirectoryPath(
-      initialDirectory: selectedPath.value,
-    );
-    if (path != null) {
-      svgVectorSelectedPath.value = path;
     }
   }
 }

@@ -8,6 +8,7 @@ import 'package:sifra/screens/widgets/copy_magic_prompt.dart';
 import 'package:sifra/screens/widgets/custom_app_bar.dart';
 
 import '../widgets/execute_script_widget.dart';
+import '../widgets/path_picker_widget.dart';
 import 'android_clipboard_monitor.dart';
 
 class AndroidClipboardMonitor extends StatelessWidget {
@@ -26,21 +27,12 @@ class AndroidClipboardMonitor extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
-                GestureDetector(
-                  onTap: controller.isListening.value
-                      ? null
-                      : controller.showPathPickerDialog,
-                  child: AbsorbPointer(
-                    child: TextField(
-                      controller: TextEditingController(
-                          text: controller.selectedPath.value ?? ""),
-                      decoration: const InputDecoration(
-                        labelText: 'Select the project',
-                        border: OutlineInputBorder(),
-                        suffixIcon: Icon(Icons.folder_open),
-                      ),
-                    ),
-                  ),
+                PathPickerWidget(
+                  isListening: controller.isListening.value,
+                  selectedPath: controller.selectedPath.value,
+                  onTap: () async {
+                    controller.showPathPickerDialog();
+                  },
                 ),
                 const SizedBox(
                   height: 20,
