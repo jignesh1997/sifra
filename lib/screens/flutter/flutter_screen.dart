@@ -19,13 +19,13 @@ class FlutterDeveloperScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              PathPickerWidget(
+             /* PathPickerWidget(
                 isListening: controller.isListening.value,
                 selectedPath: controller.selectedPath.value,
                 onTap: () async {
                   controller.showPathPickerDialog();
                 },
-              ),
+              ),*/
               ElevatedButton(
                 onPressed: controller.generateImageConstants,
                 child: const Text('Generate Image Constants'),
