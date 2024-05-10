@@ -27,7 +27,7 @@ abstract class BaseSifraController extends GetxController{
     isListening.value = false;
     timer?.cancel();
   }
-  Future<void> showPathPickerDialog() async {
+  Future<void> showPathPickerDialog(Rx<String?> selectedPath) async {
     String? path = await FilePicker.platform.getDirectoryPath();
     if (path != null) {
       selectedPath.value = path;

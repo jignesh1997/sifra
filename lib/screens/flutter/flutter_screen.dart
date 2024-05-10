@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../util/image_constant_generato_helper.dart';
 import '../widgets/copy_magic_prompt.dart';
 import '../widgets/custom_app_bar.dart';
+import '../widgets/image_constants_generator.dart';
 import '../widgets/path_picker_widget.dart';
 import 'flutter_controller.dart';
 
@@ -25,7 +27,7 @@ class FlutterDeveloperScreen extends StatelessWidget {
                   isListening: controller.isListening.value,
                   selectedPath: controller.selectedPath.value,
                   onTap: () async {
-                    controller.showPathPickerDialog();
+                    controller.showPathPickerDialog(controller.selectedPath);
                   },
                 ),
                 const SizedBox(
@@ -45,8 +47,16 @@ class FlutterDeveloperScreen extends StatelessWidget {
                               controller.toggleAutoCreateFile(value!);
                             },
                           ),
-
                           SizedBox(height: 12,),
+                          Obx(
+                                () => ImageConstantsGenerator(
+                              selectedFolderPath:controller.selectedPathImageConstant.value,
+                              onSelectFolder: (){
+                                controller.showPathPickerDialog(controller.selectedPathImageConstant);
+                              },
+                              onGenerateConstants: controller.onGenerateConstants,
+                            ),
+                          ),
                         ],
                       ),
                     ),

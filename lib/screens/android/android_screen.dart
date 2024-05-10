@@ -31,7 +31,7 @@ class AndroidClipboardMonitor extends StatelessWidget {
                   isListening: controller.isListening.value,
                   selectedPath: controller.selectedPath.value,
                   onTap: () async {
-                    controller.showPathPickerDialog();
+                    controller.showPathPickerDialog(controller.selectedPath);
                   },
                 ),
                 const SizedBox(
