@@ -21,6 +21,6 @@ class FlutterDeveloperController extends BaseSifraController {
   }
 
   void onGenerateConstants() {
-    ImageConstantGeneratorHelper.generateConstants(selectedPathImageConstant.value ?? "");
+    ImageConstantGeneratorHelper.generateConstants(selectedPath.value ??"");
   }
 }

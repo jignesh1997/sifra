@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:clipboard/clipboard.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
+import 'package:sifra/screens/util/script_utils.dart';
+import 'package:sifra/screens/widgets/execute_script_widget.dart';
 
+import '../widgets/path_picker_widget.dart';
 import 'clipbord_controller.dart';
 class ClipboardMonitor extends StatelessWidget {
   final ClipboardController controller = Get.put(ClipboardController());
@@ -22,19 +23,16 @@ class ClipboardMonitor extends StatelessWidget {
 
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: controller.isListening.value ? null : controller.showPathPickerDialog,
-                  child: AbsorbPointer(
-                    child: TextField(
-                      controller: TextEditingController(text: controller.selectedPath.value ?? ""),
-                      decoration: InputDecoration(
-                        labelText: 'Select the project',
-                        border: OutlineInputBorder(),
-                        suffixIcon: Icon(Icons.folder_open),
-                      ),
-                    ),
-                  ),
+                PathPickerWidget(
+                  isListening: controller.isListening.value,
+                  selectedPath: controller.selectedPath.value,
+                  onTap: () async {
+                    controller.showPathPickerDialog(controller.selectedPath);
+                  },
                 ),
+                ElevatedButton(onPressed: ()async{
+                  controller.executeScript();
+                }, child: Text("Select script to execute")),
                 Spacer(),
                 ElevatedButton(
                   onPressed: controller.isListening.value ? null : controller.startMonitoringClipboard,

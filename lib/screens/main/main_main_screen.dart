@@ -5,7 +5,6 @@ import 'package:sifra/screens/flutter/flutter_screen.dart';
 
 import '../android/android_screen.dart';
 import '../general_clipborad_to_file/clipboard_screen.dart';
-import 'package:window_manager/window_manager.dart';
 
 import '../widgets/custom_app_bar.dart';
 
@@ -27,6 +26,12 @@ class MainScreen extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
+                    Get.to(() => ClipboardMonitor());
+                  },
+                  child: Text('General (All)'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
                     Get.to(() => AndroidClipboardMonitor());
                   },
                   child: Text('Android'),
@@ -37,19 +42,12 @@ class MainScreen extends StatelessWidget {
                   },
                   child: Text('Flutter'),
                 ),
-                ElevatedButton(
+                /*ElevatedButton(
                   onPressed: () {
                     //  Get.to(() => AndroidClipboardMonitor());
                   },
                   child: Text('React native'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Get.to(() => ClipboardMonitor());
-                  },
-                  child: Text('Genral'),
-                ),
-                // Add more options here
+                ),*/
               ],
             ),
           ],

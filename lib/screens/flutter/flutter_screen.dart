@@ -8,13 +8,16 @@ import '../widgets/path_picker_widget.dart';
 import 'flutter_controller.dart';
 
 class FlutterDeveloperScreen extends StatelessWidget {
-  final FlutterDeveloperController controller = Get.put(FlutterDeveloperController());
+  final FlutterDeveloperController controller =
+      Get.put(FlutterDeveloperController());
 
   @override
   Widget build(BuildContext context) {
-    return  Obx(
-          () => Scaffold(
-        appBar: CustomAppBar(title: "Sifra android",),
+    return Obx(
+      () => Scaffold(
+        appBar: CustomAppBar(
+          title: "Sifra android",
+        ),
         body: Center(
           child: Container(
             padding: EdgeInsets.all(22),
@@ -47,23 +50,22 @@ class FlutterDeveloperScreen extends StatelessWidget {
                               controller.toggleAutoCreateFile(value!);
                             },
                           ),
-                          SizedBox(height: 12,),
-                          Obx(
-                                () => ImageConstantsGenerator(
-                              selectedFolderPath:controller.selectedPathImageConstant.value,
-                              onSelectFolder: (){
-                                controller.showPathPickerDialog(controller.selectedPathImageConstant);
-                              },
-                              onGenerateConstants: controller.onGenerateConstants,
-                            ),
+                          const SizedBox(
+                            height: 12,
                           ),
+                          ElevatedButton(
+                                onPressed: () {
+                                  controller.onGenerateConstants();
+                                },
+                                child: const Text("Genearte asset constant")),
                         ],
                       ),
                     ),
                   ]),
                 ),
-                SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 Align(
                     alignment: Alignment.centerLeft,
                     child: CopyMagicPromptWidget()),
@@ -78,23 +80,26 @@ class FlutterDeveloperScreen extends StatelessWidget {
                 ),*/
                 Spacer(),
                 Obx(() => ElevatedButton(
-                  onPressed: controller.isListening.value || controller.selectedPath.value == null
-                      ? null
-                      : controller.startMonitoringClipboard,
-                  child: Text('Start Listening'),
-                )),
+                      onPressed: controller.isListening.value ||
+                              controller.selectedPath.value == null
+                          ? null
+                          : controller.startMonitoringClipboard,
+                      child: Text('Start Listening'),
+                    )),
                 const SizedBox(height: 16),
                 Obx(() => ElevatedButton(
-                  onPressed: controller.isListening.value ? controller.stopMonitoringClipboard : null,
-                  child: Text('Stop Listening'),
-                )),
+                      onPressed: controller.isListening.value
+                          ? controller.stopMonitoringClipboard
+                          : null,
+                      child: Text('Stop Listening'),
+                    )),
                 const SizedBox(height: 16),
                 Obx(() => Text(
-                  controller.isListening.value
-                      ? 'Monitoring clipboard changes...'
-                      : 'Not monitoring',
-                  style: TextStyle(fontSize: 18),
-                )),
+                      controller.isListening.value
+                          ? 'Monitoring clipboard changes...'
+                          : 'Not monitoring',
+                      style: TextStyle(fontSize: 18),
+                    )),
               ],
             ),
           ),
