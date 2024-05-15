@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart' as path;
-import 'package:sifra/screens/base_sifra_controller.dart';
+import 'package:sifra/screens/base/base_sifra_controller.dart';
 import 'package:sifra/screens/util/extensions.dart';
 import 'package:sifra/screens/util/image_constant_generato_helper.dart';
 

@@ -32,7 +32,9 @@ class MainScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Get.to(() => AndroidClipboardMonitor());
+                    Get.to(() => AndroidClipboardMonitor(),
+                    arguments: {"isForReact":false}
+                    );
                   },
                   child: Text('Android'),
                 ),
@@ -42,21 +44,23 @@ class MainScreen extends StatelessWidget {
                   },
                   child: Text('Flutter'),
                 ),
-                /*ElevatedButton(
+                ElevatedButton(
                   onPressed: () {
-                    //  Get.to(() => AndroidClipboardMonitor());
+                      Get.to(() => AndroidClipboardMonitor(),
+                        arguments: {"isForReact" : true }
+                      );
                   },
                   child: Text('React native'),
-                ),*/
+                ),
               ],
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        child: Container(
+        child:  Container(
           height: 50,
-          child: Center(
+          child: const Center(
             child: Text(
               'Developed by Jignesh Shakya with ❤️',
               style: TextStyle(fontSize: 16),

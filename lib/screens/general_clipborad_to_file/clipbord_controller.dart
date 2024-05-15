@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
-import 'package:sifra/screens/base_sifra_controller.dart';
+import 'package:sifra/screens/base/base_sifra_controller.dart';
 
 import '../util/script_utils.dart';
 

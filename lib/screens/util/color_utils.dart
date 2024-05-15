@@ -56,20 +56,29 @@ class ColorUtils {
   }
 }
 
-
-void processColorString(String colorString,bool autoCreateColor,String selectedPath) {
+void processColorString(String colorString, bool autoCreateColor,
+    String selectedPath, ColorForLanguage colorForLanguage) {
   if (!colorString.startsWith('#')) {
     colorString = '#$colorString';
   }
-  processForColorFound(colorString,autoCreateColor,selectedPath);
+  processForColorFound(
+      colorString, autoCreateColor, selectedPath, colorForLanguage);
 }
 
+void processForColorFound(String color, bool autoCreateColor,
+    String selectedPath, ColorForLanguage coloForLanguage) async {
+  if (autoCreateColor == true) {
+    switch (coloForLanguage) {
+      case ColorForLanguage.android:
+        ColorUtils.addColorToAndroidColorsFile(
+            selectedPath, color.getColorName(), color);
+        break;
+      case ColorForLanguage.flutter:
+        break;
+      case ColorForLanguage.rect:
 
-void processForColorFound(String color, bool autoCreateColor,String selectedPath) async{
-  if(autoCreateColor==true){
-    ColorUtils.addColorToAndroidColorsFile(selectedPath,color.getColorName(), color);
-  }
-  else{
+    }
+  } else {
     await Get.dialog(
       InputNameDialog(
         content: color,
@@ -77,9 +86,12 @@ void processForColorFound(String color, bool autoCreateColor,String selectedPath
         title: 'Enter Color Name',
         labelText: 'Color Name',
         onConfirm: (colorName) {
-          ColorUtils.addColorToAndroidColorsFile(selectedPath!,colorName, color);
+          ColorUtils.addColorToAndroidColorsFile(
+              selectedPath!, colorName, color);
         },
       ),
     );
   }
 }
+
+enum ColorForLanguage { android, flutter, rect }

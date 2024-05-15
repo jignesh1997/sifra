@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:sifra/screens/base_sifra_controller.dart';
+import 'package:sifra/screens/base/base_sifra_controller.dart';
 import 'package:sifra/screens/util/extensions.dart';
 import 'package:sifra/screens/util/file_utils.dart';
 import 'package:sifra/screens/util/string_utils.dart';
@@ -11,9 +11,15 @@ class AndroidController extends BaseSifraController {
   RxBool autoCreateColor = false.obs;
   RxBool autoCreateString = true.obs;
   RxString selectedScriptPath = ''.obs;
+  var isForRect=false;
 
+  @override
+  void onInit() {
+    super.onInit();
+    isForRect= Get.arguments["isForReact"];
+    print(isForRect);
 
-
+  }
   @override
   void processClipboardContent(String content) {
     List<String> lines = content.split('\n');
