@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:sifra/screens/widgets/copy_magic_prompt.dart';
 import 'package:sifra/screens/widgets/custom_app_bar.dart';
@@ -71,6 +72,15 @@ class AndroidClipboardMonitor extends StatelessWidget {
                             },
                           ),
                           SizedBox(height: 12,),
+                        Visibility(
+                          visible: controller.isForRect,
+                          child: ElevatedButton(
+                            onPressed:(){
+                              controller.generateReactImageConstant();
+                            },
+                            child: Text('Generate Image Constants'),
+                          ),
+                        )
 
 
                         ],

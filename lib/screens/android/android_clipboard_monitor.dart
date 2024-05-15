@@ -25,7 +25,7 @@ class AndroidController extends BaseSifraController {
     List<String> lines = content.split('\n');
     if (lines[0].isValidColor()) {
       String colorString = lines[0].trim();
-      processColorString(colorString,autoCreateColor.value,selectedPath.value!);
+      processColorString(colorString,autoCreateColor.value,selectedPath.value!,isForRect ? ColorForLanguage.rect : ColorForLanguage.android);
     } else if (lines[0]?.startsWith('// ') == true) {
       FileUtils.processFileContent(content,selectedPath.value!,autoCreateFile.value);
     } else {
@@ -44,5 +44,12 @@ class AndroidController extends BaseSifraController {
   }
   void toggleAutoCreateColor(bool value) {
     autoCreateColor.value = value;
+  }
+
+  void generateReactImageConstant() {
+    if(selectedScriptPath.value!=null){
+      FileUtils.generateImageConstantsFile(selectedPath.value ?? "" );
+    }
+
   }
 }
