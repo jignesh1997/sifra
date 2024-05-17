@@ -48,7 +48,7 @@ class AndroidController extends BaseSifraController {
 
   void generateReactImageConstant() {
     if(selectedScriptPath.value!=null){
-      FileUtils.generateImageConstantsFile(selectedPath.value ?? "" );
+      FileUtils.generateImageConstants(selectedPath.value ?? "" );
     }
 
   }
