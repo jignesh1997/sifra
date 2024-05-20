@@ -89,7 +89,7 @@ class FileUtils {
 
  static  void generateImageConstants(String selectedPath) async {
     // Define the base paths
-    final imagesBasePath = path.join(selectedPath, 'assets', 'images');
+    final imagesBasePath = path.join(selectedPath, 'src','assets', 'images');
     final constantsFilePath = path.join(selectedPath, 'src', 'constants', 'imageconstants.js');
 
     print('Images base path: $imagesBasePath');
