@@ -47,6 +47,10 @@ extension StringExtensions on String {
     final result = _name(color);
     return result[1];
   }
+
+  String getColorNameForRect() {
+    return 'C${replaceAll('#', '')}';
+  }
 }
 
 

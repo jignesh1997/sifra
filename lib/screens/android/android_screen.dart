@@ -72,6 +72,29 @@ class AndroidClipboardMonitor extends StatelessWidget {
                             },
                           ),
                           SizedBox(height: 12,),
+                          Visibility(
+                            visible: controller.isForRect,
+                            child:Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Specify Screen Name: - "),
+                                Row(
+                                  children: [
+                                    Text("Use common"),
+
+                                    Switch(value: controller.useCommonForString.value, onChanged: (bool){
+                                      controller.toggleStringCommon(bool);
+                                    }),
+                                    SizedBox(width: 20,),
+                                    Expanded(child: TextField(controller: controller.screenName,))
+                                  ],
+                                ),
+
+                               // TextField()
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 12,),
                         Visibility(
                           visible: controller.isForRect,
                           child: ElevatedButton(

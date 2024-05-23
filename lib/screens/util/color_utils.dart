@@ -57,7 +57,7 @@ class ColorUtils {
 
 
 
-  static void addColorToRectNativeFile(String selectedProjectPath,  String colorValue) {
+  static void addColorToRectNativeFile(String selectedProjectPath,  String colorValue,String colorName) {
     try {
       String colorsFilePath = path.join(selectedProjectPath, 'src', 'constants', 'colors.tsx');
 
@@ -106,9 +106,9 @@ export default Colors;
       // Read the existing colors.tsx file
       String colorsFileContent = File(colorsFilePath).readAsStringSync();
 
-      String formattedColorName = 'C${colorValue.replaceAll('#', '')}';
+      //String formattedColorName = 'C${colorValue.replaceAll('#', '')}';
       // Check if the color entry already exists
-      if (colorsFileContent.contains('$formattedColorName:')) {
+      if (colorsFileContent.contains('$colorName:')) {
         print('Color entry already exists.');
         return;
       }
@@ -124,7 +124,7 @@ export default Colors;
       //String formattedColorName = 'C${colorName.replaceAll('#', '')}';
 
       // Insert the new color entry
-      String newColorEntry = '  $formattedColorName: \'$colorValue\',\n';
+      String newColorEntry = '  $colorName: \'$colorValue\',\n';
       colorsFileContent = colorsFileContent.replaceRange(insertPosition, insertPosition, newColorEntry);
 
       // Write the updated colors.tsx file
@@ -150,32 +150,32 @@ void processColorString(String colorString, bool autoCreateColor,
 void processForColorFound(String color, bool autoCreateColor,
     String selectedPath, ColorForLanguage coloForLanguage) async {
   if (autoCreateColor == true) {
-    processToCreateColor(color, selectedPath, coloForLanguage);
+    processToCreateColor(color, selectedPath, coloForLanguage,coloForLanguage==ColorForLanguage.rect ? color.getColorNameForRect() :color.getColorName());
   } else {
     await Get.dialog(
       InputNameDialog(
         content: color,
-        generatedName: color.getColorName(),
+        generatedName: coloForLanguage==ColorForLanguage.rect ? color.getColorNameForRect() :color.getColorName(),
         title: 'Enter Color Name',
         labelText: 'Color Name',
         onConfirm: (colorName) {
-          processToCreateColor(color, selectedPath, coloForLanguage);
+          processToCreateColor(color, selectedPath, coloForLanguage,colorName);
         },
       ),
     );
   }
 }
 
-void processToCreateColor(String color, String selectedPath, ColorForLanguage coloForLanguage) {
+void processToCreateColor(String color, String selectedPath, ColorForLanguage coloForLanguage, String colorName) {
   switch (coloForLanguage) {
     case ColorForLanguage.android:
       ColorUtils.addColorToAndroidColorsFile(
-          selectedPath, color.getColorName(), color);
+          selectedPath, colorName, color);
       break;
     case ColorForLanguage.flutter:
       break;
     case ColorForLanguage.rect:
-      ColorUtils.addColorToRectNativeFile(selectedPath, color);
+      ColorUtils.addColorToRectNativeFile(selectedPath, color,colorName);
       break;
   }
 }

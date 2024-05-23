@@ -65,17 +65,38 @@ Future<void> addStringToAndroidStringsFile(
   }
 }
 
+
+Future<void> addStringToRectStringsFile( String projectPath,String screenName, String stringKey, String stringValue) async {
+  final filePath = '${projectPath}/src/constants/Strings.js';
+  final file = File(filePath);
+
+  final buffer = StringBuffer();
+
+  if (!await file.exists()) {
+    buffer.writeln("import { AppImages } from \".\";\n");
+    buffer.writeln("export const Strings = {");
+  } else {
+    // Read the existing file content
+    final existingContent = await file.readAsString();
+    final lastBraceIndex = existingContent.lastIndexOf('}');
+    if (lastBraceIndex != -1) {
+      // Remove the last closing brace
+      final updatedContent = existingContent.substring(0, lastBraceIndex).trim();
+      await file.writeAsString(updatedContent);
+    }
+    buffer.writeln(",");
+  }
+
+  buffer.writeln("  $screenName: {");
+  buffer.writeln("    $stringKey: '$stringValue',");
+  buffer.writeln("  },");
+
+  buffer.writeln("};");
+
+  await file.writeAsString(buffer.toString(), mode: FileMode.append);
+  print('Strings file generated successfully: $filePath');
+}
+
 Future<void> showStringNameDialog(String content, String generatedStringName,String selectedPath) async {
-  await Get.dialog(
-    InputNameDialog(
-      content: content,
-      generatedName: generatedStringName,
-      title: 'Enter String Name',
-      labelText: 'String Name',
-      onConfirm: (stringName) {
-       // String stringName = stringContentToStringName(content);
-        addStringToAndroidStringsFile(selectedPath, content,stringName);
-      },
-    ),
-  );
+
 }
