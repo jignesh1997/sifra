@@ -7,6 +7,7 @@ import '../android/android_screen.dart';
 import '../general_clipborad_to_file/clipboard_screen.dart';
 
 import '../widgets/custom_app_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainScreen extends StatelessWidget {
   @override
@@ -58,16 +59,46 @@ class MainScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        child:  Container(
-          height: 50,
-          child: const Center(
-            child: Text(
-              'Developed by Jignesh Shakya with AI️',
-              style: TextStyle(fontSize: 16),
-            ),
+        child:  InkWell(
+          onTap: (){
+            redirectToLinkedInProfile();
+          },
+          child: Container(
+            height: 50,
+            child:  Center(
+              child: RichText(
+                text: const TextSpan(
+                  text: 'Developed by ',
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: 'Jignesh Shakya',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                    TextSpan(
+                      text: ' with AI️',
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                  ],
+                ),
+            )),
           ),
         ),
       ),
     );
+  }
+
+  void redirectToLinkedInProfile() async {
+    const url = 'https://www.linkedin.com/in/jigneshshakya1997';
+
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
