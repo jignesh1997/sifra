@@ -1,16 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:path/path.dart' as path;
-
-import '../widgets/color_name_dialog.dart';
+import 'package:sifra/screens/util/extensions.dart';
 import 'mis_util.dart';
-import 'package:get/get.dart';
 
 String stringContentToStringName(String stringContent) {
   List<String> words = stringContent.split(' ');
-  if (words.length <= 4) {
+  if (words.length <= 2) {
     return words.join('_').toLowerCase();
   } else {
-    return words.take(4).join('_').toLowerCase();
+    return words.take(2).join('_').toLowerCase();
   }
 }
 
@@ -66,37 +65,45 @@ Future<void> addStringToAndroidStringsFile(
 }
 
 
-Future<void> addStringToRectStringsFile( String projectPath,String screenName, String stringKey, String stringValue) async {
-  final filePath = '${projectPath}/src/constants/Strings.js';
+
+Future<void> addStringToRectStringsFile(String projectPath, String screenName, String stringKey, String stringValue) async {
+  if (screenName.isEmpty) {
+    print("Please enter Screen name");
+    return;
+  }
+  var stringCamelKey=stringKey.snakeToCamelCase();
+  var screenNameCamelKey=screenName.toLowerCase().snakeToCamelCase();
+
+  final filePath = '$projectPath/src/constants/strings.tsx';
   final file = File(filePath);
+
+  String existingContent = '';
+
+  if (await file.exists()) {
+    existingContent = await file.readAsString();
+  } else {
+    existingContent = "import { AppImages } from \".\";\n\nexport const Strings = {\n};\n";
+    await file.writeAsString(existingContent);
+  }
 
   final buffer = StringBuffer();
 
-  if (!await file.exists()) {
-    buffer.writeln("import { AppImages } from \".\";\n");
-    buffer.writeln("export const Strings = {");
+  final screenPattern = RegExp(r'(\b' + RegExp.escape(screenNameCamelKey) + r'\b\s*:\s*{[\s\S]*?}),', multiLine: true);
+  final match = screenPattern.firstMatch(existingContent);
+
+  if (match != null) {
+    final screenContent = match.group(0)!;
+    final updatedScreenContent = screenContent.replaceFirst(RegExp(r'},\s*$'), "  $stringCamelKey: '$stringValue',\n},");
+    existingContent = existingContent.replaceFirst(screenPattern, updatedScreenContent);
   } else {
-    // Read the existing file content
-    final existingContent = await file.readAsString();
-    final lastBraceIndex = existingContent.lastIndexOf('}');
-    if (lastBraceIndex != -1) {
-      // Remove the last closing brace
-      final updatedContent = existingContent.substring(0, lastBraceIndex).trim();
-      await file.writeAsString(updatedContent);
-    }
-    buffer.writeln(",");
+    final insertIndex = existingContent.lastIndexOf('};');
+    final newScreenContent = "  $screenNameCamelKey: {\n    $stringCamelKey: '$stringValue',\n  },\n";
+    existingContent = existingContent.substring(0, insertIndex) + newScreenContent + existingContent.substring(insertIndex);
   }
 
-  buffer.writeln("  $screenName: {");
-  buffer.writeln("    $stringKey: '$stringValue',");
-  buffer.writeln("  },");
+  buffer.write(existingContent);
 
-  buffer.writeln("};");
-
-  await file.writeAsString(buffer.toString(), mode: FileMode.append);
-  print('Strings file generated successfully: $filePath');
+  await file.writeAsString(buffer.toString());
+  print('Strings file updated successfully: $filePath');
 }
 
-Future<void> showStringNameDialog(String content, String generatedStringName,String selectedPath) async {
-
-}

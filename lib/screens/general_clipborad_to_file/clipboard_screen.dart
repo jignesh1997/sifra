@@ -4,23 +4,24 @@ import 'package:get/get.dart';
 import 'package:sifra/screens/util/script_utils.dart';
 import 'package:sifra/screens/widgets/execute_script_widget.dart';
 
+import '../widgets/copy_magic_prompt.dart';
 import '../widgets/path_picker_widget.dart';
 import 'clipbord_controller.dart';
+
 class ClipboardMonitor extends StatelessWidget {
   final ClipboardController controller = Get.put(ClipboardController());
 
   @override
   Widget build(BuildContext context) {
     return Obx(
-        ()=> Scaffold(
+      () => Scaffold(
         appBar: AppBar(
-          title: Text('Clipboard Monitor'),
+          title: const Text('Sifra'),
         ),
         body: Center(
           child: Container(
-            padding:EdgeInsets.all(22),
+            padding: const EdgeInsets.all(22),
             child: Column(
-
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 PathPickerWidget(
@@ -30,24 +31,42 @@ class ClipboardMonitor extends StatelessWidget {
                     controller.showPathPickerDialog(controller.selectedPath);
                   },
                 ),
-                ElevatedButton(onPressed: ()async{
-                  controller.executeScript();
-                }, child: Text("Select script to execute")),
-                Spacer(),
-                ElevatedButton(
-                  onPressed: controller.isListening.value ? null : controller.startMonitoringClipboard,
-                  child: Text('Start Listening'),
+                CheckboxListTile(
+                  contentPadding: EdgeInsets.zero,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: const Text('Auto create file'),
+                  value: controller.autoCreateFile.value,
+                  onChanged: (value) {
+                    controller.toggleAutoCreateFile(value!);
+                  },
                 ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: controller.isListening.value ? controller.stopMonitoringClipboard : null,
-                  child: Text('Stop Listening'),
+                const SizedBox(
+                  height: 20,
                 ),
-                SizedBox(height: 16),
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: CopyMagicPromptWidget()),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: controller.isListening.value
+                      ? null
+                      : controller.startMonitoringClipboard,
+                  child: const Text('Start Listening'),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: controller.isListening.value
+                      ? controller.stopMonitoringClipboard
+                      : null,
+                  child: const  Text('Stop Listening'),
+                ),
+                const SizedBox(height: 16),
                 Obx(() => Text(
-                  controller.isListening.value ? 'Monitoring clipboard changes...' : 'Not monitoring',
-                  style: TextStyle(fontSize: 18),
-                )),
+                      controller.isListening.value
+                          ? 'Monitoring clipboard changes...'
+                          : 'Not monitoring',
+                      style: const TextStyle(fontSize: 18),
+                    )),
               ],
             ),
           ),

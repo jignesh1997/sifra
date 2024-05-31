@@ -48,8 +48,8 @@ class InputNameDialog extends StatelessWidget {
           onPressed: () {
             String name = _nameController.text.trim();
             if (name.isNotEmpty) {
-              onConfirm(name);
               Get.back();
+              onConfirm(name);
             }
           },
           child: Text('Confirm'),

@@ -19,7 +19,7 @@ class AndroidClipboardMonitor extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
-        appBar: CustomAppBar(title: "Sifra android",),
+        appBar: CustomAppBar(title: controller.isForRect ? "Sifra React" : "Sifra android",),
         body: Center(
           child: Container(
             padding: EdgeInsets.all(22),

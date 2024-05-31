@@ -13,7 +13,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Main Screen',
+        title: 'Sifra',
       ),
       body: Center(
         child: Stack(
@@ -62,7 +62,7 @@ class MainScreen extends StatelessWidget {
           height: 50,
           child: const Center(
             child: Text(
-              'Developed by Jignesh Shakya with ❤️',
+              'Developed by Jignesh Shakya with AI️',
               style: TextStyle(fontSize: 16),
             ),
           ),

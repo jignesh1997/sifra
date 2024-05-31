@@ -16,7 +16,7 @@ class FlutterDeveloperScreen extends StatelessWidget {
     return Obx(
       () => Scaffold(
         appBar: CustomAppBar(
-          title: "Sifra android",
+          title: "Sifra Flutter",
         ),
         body: Center(
           child: Container(
@@ -33,6 +33,7 @@ class FlutterDeveloperScreen extends StatelessWidget {
                     controller.showPathPickerDialog(controller.selectedPath);
                   },
                 ),
+
                 const SizedBox(
                   height: 20,
                 ),
