@@ -1,7 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
+
 import 'package:path/path.dart' as path;
 import 'package:sifra/screens/util/extensions.dart';
+
 import 'mis_util.dart';
 
 String stringContentToStringName(String stringContent) {
@@ -14,7 +15,7 @@ String stringContentToStringName(String stringContent) {
 }
 
 Future<void> addStringToAndroidStringsFile(
-    String projectPath, String stringContent,String stringName) async {
+    String projectPath, String stringContent, String stringName) async {
   if (projectPath == null) {
     showErrorToast('No project location path selected.');
     return;
@@ -34,7 +35,7 @@ Future<void> addStringToAndroidStringsFile(
     String stringsFileContent = await File(stringsFilePath).readAsString();
 
     // Generate the string name based on the string content
-   // String stringName = stringContentToStringName(stringContent);
+    // String stringName = stringContentToStringName(stringContent);
 
     // Check if the string entry already exists
     if (stringsFileContent.contains('<string name="$stringName">')) {
@@ -64,15 +65,14 @@ Future<void> addStringToAndroidStringsFile(
   }
 }
 
-
-
-Future<void> addStringToRectStringsFile(String projectPath, String screenName, String stringKey, String stringValue) async {
+Future<void> addStringToRectStringsFile(String projectPath, String screenName,
+    String stringKey, String stringValue) async {
   if (screenName.isEmpty) {
     print("Please enter Screen name");
     return;
   }
-  var stringCamelKey=stringKey.snakeToCamelCase();
-  var screenNameCamelKey=screenName.toLowerCase().snakeToCamelCase();
+  var stringCamelKey = stringKey.snakeToCamelCase();
+  var screenNameCamelKey = screenName.toLowerCase().snakeToCamelCase();
 
   final filePath = '$projectPath/src/constants/strings.tsx';
   final file = File(filePath);
@@ -82,23 +82,31 @@ Future<void> addStringToRectStringsFile(String projectPath, String screenName, S
   if (await file.exists()) {
     existingContent = await file.readAsString();
   } else {
-    existingContent = "import { AppImages } from \".\";\n\nexport const Strings = {\n};\n";
+    existingContent =
+        "import { AppImages } from \".\";\n\nexport const Strings = {\n};\n";
     await file.writeAsString(existingContent);
   }
 
   final buffer = StringBuffer();
 
-  final screenPattern = RegExp(r'(\b' + RegExp.escape(screenNameCamelKey) + r'\b\s*:\s*{[\s\S]*?}),', multiLine: true);
+  final screenPattern = RegExp(
+      r'(\b' + RegExp.escape(screenNameCamelKey) + r'\b\s*:\s*{[\s\S]*?}),',
+      multiLine: true);
   final match = screenPattern.firstMatch(existingContent);
 
   if (match != null) {
     final screenContent = match.group(0)!;
-    final updatedScreenContent = screenContent.replaceFirst(RegExp(r'},\s*$'), "  $stringCamelKey: '$stringValue',\n},");
-    existingContent = existingContent.replaceFirst(screenPattern, updatedScreenContent);
+    final updatedScreenContent = screenContent.replaceFirst(
+        RegExp(r'},\s*$'), "  $stringCamelKey: '$stringValue',\n},");
+    existingContent =
+        existingContent.replaceFirst(screenPattern, updatedScreenContent);
   } else {
     final insertIndex = existingContent.lastIndexOf('};');
-    final newScreenContent = "  $screenNameCamelKey: {\n    $stringCamelKey: '$stringValue',\n  },\n";
-    existingContent = existingContent.substring(0, insertIndex) + newScreenContent + existingContent.substring(insertIndex);
+    final newScreenContent =
+        "  $screenNameCamelKey: {\n    $stringCamelKey: '$stringValue',\n  },\n";
+    existingContent = existingContent.substring(0, insertIndex) +
+        newScreenContent +
+        existingContent.substring(insertIndex);
   }
 
   buffer.write(existingContent);
@@ -107,3 +115,59 @@ Future<void> addStringToRectStringsFile(String projectPath, String screenName, S
   print('Strings file updated successfully: $filePath');
 }
 
+Future<void> addStringToFlutterGetXFile({
+  required String projectPath,
+  required String stringName,
+  required String stringContent,
+}) async {
+  try {
+    final filePath = '$projectPath/lib/strings/strings.dart';
+    final file = File(filePath);
+
+    // ✅ Check if file exists
+    if (!await file.exists()) {
+      print("strings.dart file not found.");
+      return;
+    }
+
+    // ✅ Read content
+    String content = await file.readAsString();
+
+    // ✅ Find the "en_US": { ... } block
+    final enUsStart = content.indexOf('"en_US": {');
+    if (enUsStart == -1) {
+      print("en_US block not found.");
+      return;
+    }
+
+    // ✅ Find the closing bracket of en_US block
+    final enUsEnd = content.indexOf('}', enUsStart);
+    if (enUsEnd == -1) {
+      print("Invalid format: en_US block not properly closed.");
+      return;
+    }
+
+    // ✅ Check if key already exists
+    if (content.contains('"$stringName"')) {
+      print("String key already exists.");
+      return;
+    }
+
+    // ✅ New entry to add
+    final newEntry = '      "$stringName": "$stringContent",\n';
+
+    // ✅ Insert new entry before closing `}`
+    final updatedContent = content.replaceRange(
+      enUsEnd,
+      enUsEnd,
+      newEntry,
+    );
+
+    // ✅ Save updated file
+    await file.writeAsString(updatedContent);
+
+    print("String entry added successfully.");
+  } catch (e) {
+    print("Error adding string: $e");
+  }
+}

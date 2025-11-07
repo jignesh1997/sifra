@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../util/image_constant_generato_helper.dart';
+
 import '../widgets/copy_magic_prompt.dart';
 import '../widgets/custom_app_bar.dart';
-import '../widgets/image_constants_generator.dart';
 import '../widgets/path_picker_widget.dart';
 import 'flutter_controller.dart';
 
@@ -33,7 +32,6 @@ class FlutterDeveloperScreen extends StatelessWidget {
                     controller.showPathPickerDialog(controller.selectedPath);
                   },
                 ),
-
                 const SizedBox(
                   height: 20,
                 ),
@@ -54,11 +52,22 @@ class FlutterDeveloperScreen extends StatelessWidget {
                           const SizedBox(
                             height: 12,
                           ),
+                          CheckboxListTile(
+                            contentPadding: EdgeInsets.zero,
+                            controlAffinity: ListTileControlAffinity.leading,
+                            title: Text('Auto create String'),
+                            value: controller.autoCreateString.value,
+                            onChanged: (value) {
+                              controller.autoCreateString.value =
+                                  !(controller.autoCreateString.value);
+                              // controller.toggleAutoCreateFile(value!);
+                            },
+                          ),
                           ElevatedButton(
-                                onPressed: () {
-                                  controller.onGenerateConstants();
-                                },
-                                child: const Text("Genearte asset constant")),
+                              onPressed: () {
+                                controller.onGenerateConstants();
+                              },
+                              child: const Text("Genearte asset constant")),
                         ],
                       ),
                     ),
